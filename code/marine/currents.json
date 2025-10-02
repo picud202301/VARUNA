@@ -1,0 +1,219 @@
+{
+  "uniform": {
+    "angle_range": {
+      "min": -3.14159,
+      "max": 3.14159,
+      "description": "Range in radians for the random fixed angle of the uniform current."
+    },
+    "time_factor_range": {
+      "min": -0.05,
+      "max": 0.05,
+      "description": "Angular velocity factor (rad/s) for rotating the current field over time."
+    }
+  },
+  "sinusoidal": {
+    "periods_range": {
+      "min": 1,
+      "max": 20,
+      "description": "Range for the spatial periods of the sinusoidal waves."
+    },
+    "gains_range": {
+      "min": 0,
+      "max": 1,
+      "description": "Range for the amplitude gains of the sinusoidal components."
+    },
+    "phases_range": {
+      "min": -3.14159,
+      "max": 3.14159,
+      "description": "Range for the initial phases of the waves."
+    },
+    "time_freq_range": {
+      "min": -0.1,
+      "max": 0.1,
+      "description": "Range of frequencies (rad/s) for the temporal evolution of wave phases."
+    }
+  },
+  "vortex": {
+    "number_range": {
+      "min": 2,
+      "max": 11,
+      "description": "Range for the number of vortices to generate in the field."
+    },
+    "time_velocity_range": {
+      "min": -0.5,
+      "max": 0.5,
+      "description": "Range of velocities (m/s) for the temporal displacement of vortex centers."
+    }
+  },
+  "logarithmic": {
+    "number_range": {
+      "min": 1,
+      "max": 9,
+      "description": "Range for the number of logarithmic flows to generate."
+    }
+  },
+  "gaussianSwir": {
+    "number_range": {
+      "min": 1,
+      "max": 11,
+      "description": "Range for the number of Gaussian swirls."
+    },
+    "scales_range": {
+      "min": 100.0,
+      "description": "Minimum value for the scale (standard deviation) of the swirls. The maximum is computed as 0.5 * scenario size."
+    },
+    "gains_range": {
+      "min": -2.0,
+      "max": 2.0,
+      "description": "Range for the gain (strength and direction) of each swirl."
+    },
+    "time_velocity_range": {
+      "min": -0.5,
+      "max": 0.5,
+      "description": "Range of velocities (m/s) for the temporal displacement of the swirl centers."
+    }
+  },
+  "karmanVortex": {
+    "spacing_range": {
+      "min": 50.0,
+      "max": 150.0,
+      "description": "Range for the spacing between vortices in the Kármán vortex street."
+    },
+    "strength_range": {
+      "min": 0.4,
+      "max": 1.2,
+      "description": "Range for the strength (intensity) of the vortices."
+    },
+    "phase_range": {
+      "min": 0,
+      "max": 6.28318,
+      "description": "Range for the initial phase of the vortex street."
+    },
+    "wake_center_range": {
+      "min": -10.0,
+      "max": 10.0,
+      "description": "Range for the vertical position of the wake center."
+    },
+    "time_freq_range": {
+      "min": -0.05,
+      "max": 0.05,
+      "description": "Frequency (rad/s) for phase shift evolution over time."
+    }
+  },
+  "coastalTidal": {
+    "decay_scale_factor": {
+      "value": 0.2,
+      "description": "Factor (multiplies the Y size of the scenario) for the decay scale of the current from the coast."
+    },
+    "period_range": {
+      "min": 300.0,
+      "max": 900.0,
+      "description": "Range in seconds for the tidal period."
+    },
+    "phase_range": {
+      "min": 0.0,
+      "max": 6.28318,
+      "description": "Range for the initial tidal phase."
+    }
+  },
+  "linearShear": {
+    "a_factor_range": {
+      "min": -1.0,
+      "max": 1.0,
+      "description": "Range for factor 'a' (velocity gradient). Normalized by scenario size."
+    },
+    "b_range": {
+      "min": 0.1,
+      "max": 0.6,
+      "description": "Range for term 'b' (base velocity)."
+    },
+    "cross_range": {
+      "min": -0.3,
+      "max": 0.3,
+      "description": "Range for the cross velocity component (v)."
+    }
+  },
+  "doubleGyre": {
+    "A_factor": {
+      "value": 1.0,
+      "description": "Amplitude factor multiplying the base velocity."
+    },
+    "epsilon_range": {
+      "min": 0.1,
+      "max": 0.3,
+      "description": "Range for epsilon parameter, controlling double gyre oscillation."
+    },
+    "time_freq_range": {
+      "min": 0.1,
+      "max": 0.5,
+      "description": "Frequency (rad/s) for the temporal evolution of the gyre pattern."
+    }
+  },
+  "gaussianJet": {
+    "axis_choices": {
+      "values": ["x", "y"],
+      "description": "Axis along which the Gaussian jet will be aligned."
+    },
+    "sigma_factor_range": {
+      "min": 0.05,
+      "max": 0.2,
+      "description": "Range for the factor (multiplies scenario Y size) controlling jet width (sigma)."
+    },
+    "center_factor_range": {
+      "min": -0.25,
+      "max": 0.25,
+      "description": "Range for the factor (multiplies scenario Y size) controlling jet center position."
+    },
+    "amplitude_factor": {
+      "value": 1.5,
+      "description": "Amplitude factor multiplying the base velocity at the jet center."
+    }
+  },
+  "riverOutflow": {
+    "mouth_x_factor_range": {
+      "min": -0.8,
+      "max": 0.8,
+      "description": "Range for the factor (multiplies scenario X size) for river mouth X position."
+    },
+    "mouth_y_factor": {
+      "value": -0.8,
+      "description": "Fixed factor (multiplies scenario Y size) for river mouth Y position."
+    },
+    "spread_factor_range": {
+      "min": 0.5,
+      "max": 0.8,
+      "description": "Range for the factor (multiplies scenario X size) controlling flow angular spread."
+    },
+    "decay_range": {
+      "min": 0.1,
+      "max": 0.6,
+      "description": "Range for the velocity decay exponent with distance."
+    },
+    "spread_amplitude_factor": {
+      "value": 5.0,
+      "description": "Amplitude factor controlling intensity of the outflow current at the mouth."
+    }
+  },
+  "turbulenceNoise": {
+    "modes_range": {
+      "min": 3,
+      "max": 7,
+      "description": "Range for the number of Fourier modes used to generate turbulence noise."
+    },
+    "phases_range": {
+      "min": 0.2,
+      "max": 0.5,
+      "description": "Range for random phases of the modes."
+    },
+    "gains_range": {
+      "min": 0.5,
+      "max": 0.9,
+      "description": "Range for the amplitude gains of the modes."
+    },
+    "time_freq_range": {
+      "min": -0.1,
+      "max": 0.1,
+      "description": "Range of frequencies (rad/s) for the temporal evolution of turbulence phases."
+    }
+  }
+}
