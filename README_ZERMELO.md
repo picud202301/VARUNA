@@ -17,7 +17,7 @@ Given a 2D flow field **u(x, y)** and a vessel with constant speed **V**, find a
 1) **Run the Zermelo baseline** (single instance; compare active solvers)
 
     python run_problem.py
-
+   <pre style="font-size:12px">
     # Config: code/problems/problems.py
     # -----------------------------------------------------------------------
     # PROBLEM_NAME: 'zermelo'
@@ -28,11 +28,11 @@ Given a 2D flow field **u(x, y)** and a vessel with constant speed **V**, find a
     #    "gaussianJet","riverOutflow","turbulenceNoise"]
     # SIZE_ID: 1  # {1:200x200, 2:2000x2000, 3:20000x20000}
     # MASTER_SEED: Optional[int] = None  # set int for reproducibility
-
+   </pre>
 2) **Run batch simulations** (build the benchmark database)
 
     python run_simulations.py
-
+   <pre style="font-size:12px">
     # Config: code/run_simulations.py
     # -----------------------------------------------------------------------
     # PROBLEM_NAME: "zermelo"
@@ -46,7 +46,7 @@ Given a 2D flow field **u(x, y)** and a vessel with constant speed **V**, find a
     # DATABASE_FILE: os.path.abspath(os.path.join(DATA_PATH,"zermelo","zermelo.db"))
     # DB_RESET: True            # clear DB before running
     # PARALLEL_EXECUTION: True  # enable parallel sims
-
+   </pre>
 3) **Generate reports** (tables/figures for manuscripts)
 
     python report_simulations.py
@@ -71,6 +71,7 @@ Given a 2D flow field **u(x, y)** and a vessel with constant speed **V**, find a
 3) **Implement the minimal interface**
 
     # problems/zermelo/solvers/<your_solver_name>/solver.py
+    <pre style="font-size:12px">
     from typing import Dict, Any
     import numpy as np
 
@@ -94,10 +95,11 @@ Given a 2D flow field **u(x, y)** and a vessel with constant speed **V**, find a
             max_execution_time=kwargs.get("max_execution_time", None),
             controller=lambda t, x: control(t, x, problem, **kwargs),
         )
-
+   </pre>
 4) **Required outputs** (for fair comparisons)
 
     # Must return (directly or via simulate):
+    <pre style="font-size:12px">
     simulation_data = {
         "id": str,
         "time_step": float,
@@ -114,7 +116,7 @@ Given a 2D flow field **u(x, y)** and a vessel with constant speed **V**, find a
         "state_derivatives_history": np.ndarray,
         "navigation_index": float
     }
-
+   </pre>
 ---
 
 ## Reproducibility Notes

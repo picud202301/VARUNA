@@ -2,12 +2,12 @@
   <img src="logo_varuna.png" alt="VARUNA / VARUNA Logo" width="220">
 </p>
 
-# VARUNA: A Modular Benchmarking Framework for Marine Navigation
+# VARUNA: A Modular Benchmarking Framework for  Navigation Algorithms
 
 [![Status](https://img.shields.io/badge/status-alpha-informational)]()
 [![License](https://img.shields.io/badge/license-TBD-lightgrey)]()
 
-> Standardized, extensible experiments for marine navigation under ocean currents, starting from the classical **Zermelo** problem.
+> Standardized, extensible experiments for marine navigation under diferent enviroments, starting from the classical **Zermelo** problem.
 
 ## Overview
 Autonomous marine navigation spans route planning in dynamic environments, compliance with COLREGs, obstacle avoidance, multi-vehicle coordination, and decision-making under uncertainty. Environmental disturbances—currents, wind, and waves—and the trade-offs among travel time, safety, energy, and robustness highlight the need for **standardized and reproducible** benchmarks.  
