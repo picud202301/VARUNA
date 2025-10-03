@@ -10,6 +10,122 @@ Given a 2D flow field **u(x, y)** and a vessel with constant speed **V**, find a
 
 > Associated paper: *Standardizing Navigation Algorithms: A Benchmarking Framework for the Zermelo Problem*.
 
+
+## Quick Start
+
+
+1) **Run the Zermelo baseline** (single instance; compare active solvers)
+
+    python run_problem.py
+
+    # Config: code/problems/problems.py
+    # -----------------------------------------------------------------------
+    # PROBLEM_NAME: 'zermelo'
+    # SCENARIO_TYPE: 'random'   # {'fixed', 'random'}
+    # CURRENT_TYPE: Optional[str] = None  # None => sample from:
+    #   ["uniform","sinusoidal","logarithmic","gaussianSwirl","vortex",
+    #    "karmanVortex","coastalTidal","linearShear","doubleGyre",
+    #    "gaussianJet","riverOutflow","turbulenceNoise"]
+    # SIZE_ID: 1  # {1:200x200, 2:2000x2000, 3:20000x20000}
+    # MASTER_SEED: Optional[int] = None  # set int for reproducibility
+
+2) **Run batch simulations** (build the benchmark database)
+
+    python run_simulations.py
+
+    # Config: code/run_simulations.py
+    # -----------------------------------------------------------------------
+    # PROBLEM_NAME: "zermelo"
+    # SCENARIO_TYPE: "random"  # new scenario per sim if 'random'
+    # MASTER_SEED: Optional[int] = 1  # None => random
+    # NUM_SIMULATIONS: 1000      # per scenario & current
+    #
+    # SIZES_ID: Optional[Iterable[int]] = None   # e.g., [1]; None => all
+    # CURRENTS_ID: Optional[Iterable[int]] = None  # None => all (0..11)
+    #
+    # DATABASE_FILE: os.path.abspath(os.path.join(DATA_PATH,"zermelo","zermelo.db"))
+    # DB_RESET: True            # clear DB before running
+    # PARALLEL_EXECUTION: True  # enable parallel sims
+
+3) **Generate reports** (tables/figures for manuscripts)
+
+    python report_simulations.py
+
+---
+
+## Extending Solvers (Zermelo)
+
+1) **Create a solver module**
+    
+    problems/zermelo/solvers/<your_solver_name>/
+      ├── __init__.py
+      └── solver.py
+
+2) **Register the solver**
+    
+    problems/zermelo/problems.py
+    # Add to AVAILABLE_SOLVERS:
+    #   - "solve": callable
+    #   - "meta":  dict (name, deterministic, params)
+
+3) **Implement the minimal interface**
+
+    # problems/zermelo/solvers/<your_solver_name>/solver.py
+    from typing import Dict, Any
+    import numpy as np
+
+    METADATA: Dict[str, Any] = {
+        "name": "YourSolver",
+        "deterministic": True,   # or False
+        "params": {"max_steps": 10_000, "time_step": 0.1},
+    }
+
+    def control(t: float, x: np.ndarray, problem, **kwargs):
+        # Return control (e.g., heading or rate).
+        return 0.0  # placeholder
+
+    def solve(problem, **kwargs):
+        # Use problem.simulate(...) to standardize outputs.
+        return problem.simulate(
+            sim_id=METADATA["name"],
+            state=problem.initial_state,
+            max_steps=kwargs.get("max_steps", METADATA["params"]["max_steps"]),
+            time_step=kwargs.get("time_step", METADATA["params"]["time_step"]),
+            max_execution_time=kwargs.get("max_execution_time", None),
+            controller=lambda t, x: control(t, x, problem, **kwargs),
+        )
+
+4) **Required outputs** (for fair comparisons)
+
+    # Must return (directly or via simulate):
+    simulation_data = {
+        "id": str,
+        "time_step": float,
+        "num_steps": int,
+        "goal_objective": (float, float),
+        "total_time": float,
+        "total_distance": float,
+        "last_state": np.ndarray,
+        "distance_to_goal": float,
+        "time_history": np.ndarray,
+        "states_history": np.ndarray,
+        "controls_history": np.ndarray,
+        "disturbance_history": np.ndarray,
+        "state_derivatives_history": np.ndarray,
+        "navigation_index": float
+    }
+
+---
+
+## Reproducibility Notes
+
+- Use a fixed `MASTER_SEED` for pseudo-randomness in scenarios and (if applicable) solvers.
+- Keep `SCENARIO_TYPE`, `SIZE_ID`, and `CURRENT_TYPE` consistent when comparing methods.
+- All solvers run under the same protocol (identical scenarios, step sizes, stopping criteria) to ensure like-for-like, repeatable evaluations.
+
+---
+
+
 ---
 
 ## Implemented Solvers
@@ -29,46 +145,6 @@ If your repository keeps runners under `code/`, use:
 ### Run a single Zermelo instance and compare results from different solvers
 _Solver configuration and activation can be modified in_ `code/problems/problems.py`.
 
-    bash
-    python run_problem.py
-
-The execution is defined with the following elements:
-
-    # =======================================================================
-    # CONFIGURE EXECUTION
-    # =======================================================================
-    PROBLEM_NAME: str = 'zermelo' 
-    SCENARIO_TYPE: str = 'random'  # Options: 'fixed', 'random'
-    CURRENT_TYPE: Optional[str] = None  # If None, randomly selected from:
-    # ["uniform", "sinusoidal", "logarithmic", "gaussianSwirl", "vortex",
-    #  "karmanVortex", "coastalTidal", "linearShear", "doubleGyre",
-    #  "gaussianJet", "riverOutflow", "turbulenceNoise"]
-    SIZE_ID: int = 1  # Options: 1:(200x200)m; 2:(2000x2000)m; 3:(20000x20000)m
-    MASTER_SEED: Optional[int] = None  # If None, a random seed is used. Set an integer to generate reproducible repetitions.
-
-### Run multiple simulations to generate benchmark database data 
-
-    bash
-    python run_simulations.py
-
-The execution is defined with the following elements:
-
-    PROBLEM_NAME: str = "zermelo"
-    SCENARIO_TYPE: str = "random"  # If 'random', a new scenario is executed in every simulation. If 'fixed', all simulations share the same conditions except for the goal point.
-    MASTER_SEED: int = 1  # Global seed to ensure reproducible results. If None, a random seed is used.
-    NUM_SIMULATIONS: int = 1000  # Number of simulations for each scenario and current type.
-    SIZES_ID: Optional[Iterable[int]] = None  # e.g., [1]  # List of size IDs to be evaluated. If None, all sizes are used. Default [1, 2, 3]
-    CURRENTS_ID: Optional[Iterable[int]] = None  # List of currents to be evaluated (by index). If None, all current types are used. Default [0, .., 11]
-    DATABASE_FILE: str = os.path.abspath(os.path.join(DATA_PATH, "zermelo", "zermelo.db"))  # Path to the database file
-    DB_RESET: bool = True  # If True, the database is cleared before running simulations.
-    PARALLEL_EXECUTION: bool = True  # Enable parallel execution of scenarios to speed up results.
-
-### Generate graphics and reporting information (tables/figures for the manuscript)
-
-    bash
-    python report_simulations.py
-
----
 
 ## Extending Zermelo Solvers
 You can add new solution methods by **creating a solver** and **activating** it:
