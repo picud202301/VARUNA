@@ -27,22 +27,8 @@ Autonomous marine navigation spans route planning in dynamic environments, compl
 
 ## Quick Start
 
-1) **Clone**
-    
-    git clone https://github.com/picud202301/VARUNA.git
-    cd VARUNA
 
-2) **Set up the environment** (pick one)
-
-    # uv/pip (example)
-    python -m venv .venv
-    source .venv/bin/activate   # Windows: .venv\Scripts\activate
-    pip install -r requirements.txt
-
-    # Editable install
-    pip install -e .
-
-3) **Run the Zermelo baseline** (single instance; compare active solvers)
+1) **Run the Zermelo baseline** (single instance; compare active solvers)
 
     python run_problem.py
 
@@ -57,7 +43,7 @@ Autonomous marine navigation spans route planning in dynamic environments, compl
     # SIZE_ID: 1  # {1:200x200, 2:2000x2000, 3:20000x20000}
     # MASTER_SEED: Optional[int] = None  # set int for reproducibility
 
-4) **Run batch simulations** (build the benchmark database)
+2) **Run batch simulations** (build the benchmark database)
 
     python run_simulations.py
 
@@ -75,7 +61,7 @@ Autonomous marine navigation spans route planning in dynamic environments, compl
     # DB_RESET: True            # clear DB before running
     # PARALLEL_EXECUTION: True  # enable parallel sims
 
-5) **Generate reports** (tables/figures for manuscripts)
+3) **Generate reports** (tables/figures for manuscripts)
 
     python report_simulations.py
 
