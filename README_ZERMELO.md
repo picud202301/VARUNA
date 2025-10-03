@@ -12,17 +12,17 @@ Given a 2D flow field **u(x, y)** and a vessel with constant speed **V**, find a
 
 
 ## Quick Start
-
+Set up  your folder as VARUNA/code/.
 
 1) **Run the Zermelo baseline** (single instance; compare active solvers)
 
     python run_problem.py
    <pre style="font-size:12px">
-    # Config: code/problems/problems.py
+    # Configured with the following  parameters:
     # -----------------------------------------------------------------------
     # PROBLEM_NAME: 'zermelo'
-    # SCENARIO_TYPE: 'random'   # {'fixed', 'random'}
-    # CURRENT_TYPE: Optional[str] = None  # None => sample from:
+    # SCENARIO_TYPE: 'random'   # Options: {'fixed', 'random'}. fixed is the scenario used in the analysis  section of the manuscript.
+    # CURRENT_TYPE: Optional[str] = None  # None => sample random from:
     #   ["uniform","sinusoidal","logarithmic","gaussianSwirl","vortex",
     #    "karmanVortex","coastalTidal","linearShear","doubleGyre",
     #    "gaussianJet","riverOutflow","turbulenceNoise"]
@@ -56,45 +56,48 @@ Given a 2D flow field **u(x, y)** and a vessel with constant speed **V**, find a
 ## Extending Solvers (Zermelo)
 
 1) **Create a solver module**
+    Create a solver class named SolverZermeloYourSolver in: problems/zermelo/solvers/SolverZermeloYourSolver.py
     
-    problems/zermelo/solvers/<your_solver_name>/
-      ├── __init__.py
-      └── solver.py
 
 2) **Register the solver**
-    
-    problems/zermelo/problems.py
-    # Add to AVAILABLE_SOLVERS:
-    #   - "solve": callable
-    #   - "meta":  dict (name, deterministic, params)
-
-3) **Implement the minimal interface**
-
-    # problems/zermelo/solvers/<your_solver_name>/solver.py
+    Resgister a your solver in file:  problems/zermelo/problems.py as follows:
     <pre style="font-size:12px">
-    from typing import Dict, Any
-    import numpy as np
+    # ---------------------- Configure solvers ----------------------
+      from problems.zermelo.solvers.SolverZermeloAnalytic import SolverZermeloAnalytic
+      from problems.zermelo.solvers.SolverZermeloIpopt import SolverZermeloIpopt
+      from problems.zermelo.solvers.SolverZermeloAStar import SolverZermeloAStar
+      from problems.zermelo.solvers.SolverZermeloPSO import SolverZermeloPSO
+      from problems.zermelo.solvers.SolverZermeloYourSolver import SolverZermeloYourSolver
+      from problems.zermelo.ProblemZermelo import ProblemZermelo
+      solvers_configuration = {
+         'analytic':   {'class': SolverZermeloAnalytic, 'active': True, 'parameters':{'color':'red',  'library': 'np'}},
+         'astar':      {'class': SolverZermeloAStar,     'active': True, 'parameters':{'color':'blue',  'library': 'np'}},
+         'pso':        {'class': SolverZermeloPSO,       'active': True, 'parameters':{'color':'black',  'library': 'np'}},
+         'ipopt':      {'class': SolverZermeloIpopt,    'active': True, 'parameters':{'color':'green',  'library': 'pyo'}},
+         'your_solver': {'class': SolverZermeloYourSolver,       'active': True, 'parameters':{'color':'magenta',  'library': 'np'}},
+      }
+      </pre>
+3) **Implement the solver interface**
+    In class SolverZermeloYourSolver there must be the following 2 functions:
+    <pre style="font-size:12px">
+    def control(self, step: int, state: List[float]) -> np.ndarray:
+        # Your control code: generate ship_velocity and heading_rate
+        ship_velocity: float = self.scenario.getShipVelocity()
+        heading_rate : float = <your control solution>
+        heading_rate = np.clip(heading_rate, self.scenario.getRMin(), self.scenario.getRMax())
+        return np.array([ship_velocity, heading_rate], dtype=float)
 
-    METADATA: Dict[str, Any] = {
-        "name": "YourSolver",
-        "deterministic": True,   # or False
-        "params": {"max_steps": 10_000, "time_step": 0.1},
-    }
-
-    def control(t: float, x: np.ndarray, problem, **kwargs):
-        # Return control (e.g., heading or rate).
-        return 0.0  # placeholder
-
-    def solve(problem, **kwargs):
-        # Use problem.simulate(...) to standardize outputs.
-        return problem.simulate(
-            sim_id=METADATA["name"],
-            state=problem.initial_state,
-            max_steps=kwargs.get("max_steps", METADATA["params"]["max_steps"]),
-            time_step=kwargs.get("time_step", METADATA["params"]["time_step"]),
-            max_execution_time=kwargs.get("max_execution_time", None),
-            controller=lambda t, x: control(t, x, problem, **kwargs),
-        )
+    def solve(self, max_steps: int, time_step: float, max_execution_time: float) -> Optional[Dict]:
+        # Your code to solve the problem and configure the control function response
+        simulation_data: Optional[Dict] = self.simulate(
+                sim_id="Your solver",
+                state=initial_state,
+                max_steps=max_steps,
+                time_step=time_step,
+                max_execution_time=max_execution_time
+            )
+            return simulation_data
+        
    </pre>
 4) **Required outputs** (for fair comparisons)
 
