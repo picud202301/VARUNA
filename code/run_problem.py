@@ -45,11 +45,14 @@ from problems.problems import loadProblem
 # =======================================================================
 # CONFIGURE EXECUTION
 # =======================================================================
-PROBLEM_NAME: str = 'zermelo'  # Options: 'planning', 'colreg'
-SCENARIO_TYPE: str = 'random'  # Options: 'fixed'
-CURRENT_TYPE: Optional[str] = None
-SIZE_ID: int = 1
-MASTER_SEED: Optional[int] = None
+PROBLEM_NAME: str = "zermelo"
+SCENARIO_TYPE: str = "random"   # {"fixed", "random"}
+CURRENT_TYPE: Optional[str] = None  # If None, a type is sampled from:
+# ["uniform","sinusoidal","logarithmic","gaussianSwirl","vortex",
+#  "karmanVortex","coastalTidal","linearShear","doubleGyre",
+#  "gaussianJet","riverOutflow","turbulenceNoise"]
+SIZE_ID: int = 1  # {1: 200x200 m, 2: 2000x2000 m, 3: 20000x20000 m}
+MASTER_SEED: Optional[int] = None  # Set an int for reproducible runs
 
 # Interesting seeds for testing:
 # 775012903: IPOPT solver may fail.

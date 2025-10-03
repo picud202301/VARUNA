@@ -19,16 +19,6 @@ def loadProblem(problem_name, problem_rng):
             'ipopt':      {'class': SolverZermeloIpopt,    'active': True, 'parameters':{'color':'green',  'library': 'pyo'}},
         }
         problem = ProblemZermelo(rng = problem_rng)
-        
-    elif problem_name == 'planning':
-        from problems.planning.solvers.SolverPlanningAnalytic import SolverPlanningAnalytic
-        from problems.planning.solvers.SolverPlanningAstar import SolverPlanningAstar
-        from problems.planning.ProblemPlanning import ProblemPlanning
-        solvers_configuration = {
-            'analytic':   {'class': SolverPlanningAnalytic, 'active': True, 'parameters':{'color':'red',  'library': 'np'}},
-            'astar':      {'class': SolverPlanningAstar,     'active': True, 'parameters':{'color':'blue',  'library': 'np'}}
-        }
-        problem = ProblemPlanning(rng = problem_rng)        
 
     return problem, solvers_configuration, solvers_parameters
 

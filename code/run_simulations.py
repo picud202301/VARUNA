@@ -51,14 +51,15 @@ log = logging.getLogger(__name__)
 # CONFIGURATION
 # =======================================================================
 PROBLEM_NAME: str = "zermelo"
-SCENARIO_TYPE: str = "random"
-MASTER_SEED: int = 1
-NUM_SIMULATIONS: int = 1000
-SIZES_ID: Optional[Iterable[int]] = None  # e.g. [1]
-CURRENTS_ID: Optional[Iterable[int]] = None  # e.g. [0, 5, 7, 8, 11]
-DATABASE_FILE: str = os.path.abspath(os.path.join(DATA_PATH, "/zermelo/zermelo.db"))
-DB_RESET: bool = True
-PARALLEL_EXECUTION: bool = True
+SCENARIO_TYPE: str = "random" # If random a new random scenrario us executed ever ysimtualtoon. If fixed, all scenrarios are executed with same conditions except for the goal objective point.
+MASTER_SEED: int = 1 # Global seed to ensure reproducible results. If None is random selected.
+NUM_SIMULATIONS: int = 1000 # Number of smiulations for each scenario and current type.
+SIZES_ID: Optional[Iterable[int]] = None  # e.g. [1]  # List of scenarios to be evaluated. If None all scnearios are used. Default [1,2,3]
+CURRENTS_ID: Optional[Iterable[int]] = None  # List of currents to be evaluated. If None all current types are used. Defaault [0, .., 11]
+DATABASE_FILE: str = os.path.abspath(os.path.join(DATA_PATH, "/zermelo/zermelo.db")) #PAth of database file
+DB_RESET: bool = True #Set id dababase must be empty before to execute simulations.
+PARALLEL_EXECUTION: bool = True #Set if parallel execution of scenarios is executed to get faster results
+
 
 
 # =======================================================================
