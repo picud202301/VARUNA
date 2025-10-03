@@ -53,14 +53,14 @@ Set up  your folder as VARUNA/code/.
 
 ---
 
-## Extending Solvers (Zermelo)
+## Extending Solvers
 
 1) **Create a solver module**
-    Create a solver class named SolverZermeloYourSolver in: problems/zermelo/solvers/SolverZermeloYourSolver.py
+    Create a solver class named SolverZermeloYourSolver in file: problems/zermelo/solvers/SolverZermeloYourSolver.py
     
 
 2) **Register the solver**
-    Resgister a your solver in file:  problems/zermelo/problems.py as follows:
+    Resgister your solver in file:  problems/zermelo/problems.py as follows:
     <pre style="font-size:12px">
     # ---------------------- Configure solvers ----------------------
       from problems.zermelo.solvers.SolverZermeloAnalytic import SolverZermeloAnalytic
@@ -74,11 +74,11 @@ Set up  your folder as VARUNA/code/.
          'astar':      {'class': SolverZermeloAStar,     'active': True, 'parameters':{'color':'blue',  'library': 'np'}},
          'pso':        {'class': SolverZermeloPSO,       'active': True, 'parameters':{'color':'black',  'library': 'np'}},
          'ipopt':      {'class': SolverZermeloIpopt,    'active': True, 'parameters':{'color':'green',  'library': 'pyo'}},
-         'your_solver': {'class': SolverZermeloYourSolver,       'active': True, 'parameters':{'color':'magenta',  'library': 'np'}},
+         'your_solver':{'class': SolverZermeloYourSolver,'active': True, 'parameters':{'color':'magenta',  'library': 'np', 'your_parameter':value, ...}},
       }
       </pre>
 3) **Implement the solver interface**
-    In class SolverZermeloYourSolver there must be the following 2 functions:
+    In class SolverZermeloYourSolver thta must contain the  following 2 functions:
     <pre style="font-size:12px">
     def control(self, step: int, state: List[float]) -> np.ndarray:
         # Your control code: generate ship_velocity and heading_rate
